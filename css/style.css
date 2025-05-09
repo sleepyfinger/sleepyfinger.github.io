@@ -1,0 +1,320 @@
+:root {
+  --font-family-base: "Noto Sans KR", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --bg-color: #f8f9fa;
+  --text-color: #212529;
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --accent-color: #e74c3c;
+  --header-bg: #343a40;
+  --header-text: #f8f9fa;
+  --card-bg: #ffffff;
+  --border-color: #dee2e6;
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  --border-radius: 0.375rem;
+}
+
+body {
+  font-family: var(--font-family-base);
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  width: 90%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+header {
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  padding: 1.5em 0;
+  box-shadow: var(--shadow-sm);
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header .logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+header .logo-site-title {
+  color: var(--header-text);
+  font-size: 1.8em;
+  font-weight: 500;
+  margin: 0;
+}
+
+header .logo-img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+header nav a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 1.1em;
+  transition: color 0.3s ease;
+}
+
+header nav a:hover,
+header nav a.active {
+  color: var(--header-text);
+}
+
+main {
+  flex-grow: 1;
+  padding: 30px 0;
+}
+
+.team-intro-hero {
+  background-color: var(--card-bg);
+  padding: 40px 30px;
+  text-align: center;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 30px;
+}
+
+.team-intro-hero h2 {
+  font-size: 2.2em;
+  color: var(--header-bg);
+  margin-bottom: 15px;
+}
+
+.team-name-highlight {
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+.team-intro-hero p {
+  font-size: 1.1em;
+  color: var(--secondary-color);
+  line-height: 1.7;
+  margin-bottom: 25px;
+}
+
+.btn {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 12px 25px;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  margin: 0 10px;
+  font-size: 1em;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: 500;
+}
+.btn:hover {
+  background-color: #0056b3; /* --primary-color의 어두운 버전 */
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: #fff;
+}
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.btn-small {
+  padding: 8px 15px;
+  font-size: 0.9em;
+}
+
+.team-values {
+  background-color: var(--card-bg);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 30px; /* .team-intro-hero와 일관된 간격 유지 */
+}
+.team-values h3 {
+  text-align: center;
+  color: var(--header-bg);
+  margin-bottom: 20px;
+}
+.team-values ul {
+  list-style: none;
+  padding: 0;
+  text-align: center;
+}
+.team-values ul li {
+  margin-bottom: 10px;
+  font-size: 1.05em;
+  color: var(--text-color);
+}
+
+.post-list .post-item {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.post-list .post-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.post-item h2 {
+  margin-top: 0;
+  font-size: 1.8em;
+  font-weight: 500;
+}
+
+.post-item h2 a {
+  text-decoration: none;
+  color: var(--header-bg);
+}
+
+.post-item h2 a:hover {
+  color: var(--accent-color);
+}
+
+.post-meta {
+  font-size: 0.9em;
+  color: var(--secondary-color);
+  margin-bottom: 15px;
+}
+
+.post-excerpt {
+  color: var(--text-color);
+  margin-bottom: 15px;
+}
+
+.read-more {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 8px 15px;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+}
+
+.read-more:hover {
+  background-color: #0056b3;
+}
+
+.post-full .post-title {
+  font-size: 2.5em;
+  color: var(--header-bg);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.post-full .post-meta {
+  margin-bottom: 30px;
+  color: var(--secondary-color);
+}
+
+.post-full .post-content {
+  font-size: 1.1em;
+  line-height: 1.8;
+}
+
+.post-full .post-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+  margin: 20px 0;
+}
+
+.games-section {
+  background-color: var(--card-bg);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+.games-section h2 {
+  text-align: center;
+  color: var(--header-bg);
+  margin-bottom: 25px;
+}
+.game-item {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+.game-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.social-links-section {
+  background-color: var(--card-bg);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  margin-top: 30px;
+  text-align: center;
+}
+
+.social-links-section h3 {
+  color: var(--header-bg);
+  margin-bottom: 25px;
+}
+
+.social-icons-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.social-icons-container a {
+  color: var(--secondary-color);
+  font-size: 2em;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons-container a:hover {
+  color: var(--primary-color);
+  transform: scale(1.1);
+}
+
+.social-icons-container a[title="YouTube"]:hover {
+  color: #ff0000;
+}
+.social-icons-container a[title="Instagram"]:hover {
+  color: #e4405f;
+}
+.social-icons-container a[title="Twitter"]:hover {
+  color: #1da1f2;
+}
+.social-icons-container a[title="외부 블로그"]:hover, /* home.md의 title과 일치시키거나, home.md를 "네이버 블로그"로 변경 */
+.social-icons-container a[title="네이버 블로그"]:hover { /* 사용자가 네이버 블로그를 특정하여 사용 중일 수 있으므로 유지 */
+  color: #03C75A;
+}
+.social-icons-container a[title="itch.io"]:hover {
+  color: #fa5c5c;
+}
+
+footer {
+  background-color: #212529;
+  color: var(--secondary-color);
+  text-align: center;
+  padding: 2em 0;
+  margin-top: auto;
+}
