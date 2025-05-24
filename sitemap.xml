@@ -12,10 +12,4 @@
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
-    <url>
-        <loc>https://sleepyfinger.github.io/#/blog</loc>
-        <lastmod>2025-05-09</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.7</priority>
-    </url>
 </urlset>
