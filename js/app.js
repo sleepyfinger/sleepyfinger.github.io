@@ -6,29 +6,29 @@ document.addEventListener("DOMContentLoaded", () => {
     HOME: "/",
     BLOG: "/blog",
     GAMES: "/games",
-    POST_PREFIX: "/posts/",
+    POST_PREFIX: "/post/",
   };
 
+  const CONTENT_PATH_PREFIX = {
+    PAGES: "pages/",
+    POSTS: "posts/",
+  };
+  const MARKDOWN_EXTENSION = ".md";
+
   function parseMarkdown(rawContent) {
-    const frontmatter = {};
-    let content = "";
     const lines = rawContent.split("\n");
-    let inFrontmatter = false;
+    const metadata = {};
+    let contentStartIndex = 0;
 
-    if (lines[0] && lines[0].trim() === "---") {
-      inFrontmatter = true;
-      lines.shift();
-    } else {
-      return { metadata: {}, content: rawContent.trim() };
-    }
+    if (lines.length > 0 && lines[0].trim() === "---") {
+      contentStartIndex = 1;
+      let frontmatterEndIndex = -1;
 
-    let frontmatterEndIndex = -1;
-    for (let i = 0; i < lines.length; i++) {
+      for (let i = 1; i < lines.length; i++) {
       if (lines[i].trim() === "---") {
         frontmatterEndIndex = i;
         break;
       }
-      if (inFrontmatter) {
         const separatorIndex = lines[i].indexOf(":");
         if (separatorIndex > 0) {
           const key = lines[i].substring(0, separatorIndex).trim();
@@ -39,27 +39,22 @@ document.addEventListener("DOMContentLoaded", () => {
           ) {
             value = value.substring(1, value.length - 1);
           }
-          frontmatter[key] = value;
+          metadata[key] = value;
         }
+    }
+
+      if (frontmatterEndIndex !== -1) {
+        contentStartIndex = frontmatterEndIndex + 1;
+      } else {
+        console.warn(
+          "Markdown frontmatter started with '---' but was not properly closed. Treating entire input as content."
+        );
+        contentStartIndex = 0;
+        for (const key in metadata) delete metadata[key];
       }
     }
-
-    if (frontmatterEndIndex !== -1) {
-      content = lines
-        .slice(frontmatterEndIndex + 1)
-        .join("\n")
-        .trim();
-    } else {
-      console.warn(
-        "Markdown frontmatter did not end with '---'. Treating entire file as content after initial '---'."
-      );
-      return {
-        metadata: {},
-        content: rawContent.substring(rawContent.indexOf("\n") + 1).trim(),
-      };
-    }
-
-    return { metadata: frontmatter, content: content };
+    const content = lines.slice(contentStartIndex).join("\n").trim();
+    return { metadata, content };
   }
 
   async function loadAndRenderHTML({
@@ -115,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function renderTeamHomePage() {
     await loadAndRenderHTML({
-      filePath: `pages/home.html`,
+      filePath: `${CONTENT_PATH_PREFIX.PAGES}home.html`,
       targetElement: appRoot,
       successCallback: () => updateActiveNav(ROUTES.HOME),
       errorTitle: "팀 소개 페이지 로딩 오류",
@@ -135,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
       postManifest.length === 0
     ) {
       await loadAndRenderHTML({
-        filePath: `pages/blog-empty.html`,
+        filePath: `${CONTENT_PATH_PREFIX.PAGES}blog-empty.html`,
         targetElement: postListContainer,
         errorTitle: "블로그 목록 로딩 오류",
         fallbackHTMLOnError:
@@ -165,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function renderGamesPage() {
     await loadAndRenderHTML({
-      filePath: `pages/games.html`,
+      filePath: `${CONTENT_PATH_PREFIX.PAGES}games.html`,
       targetElement: appRoot,
       successCallback: () => updateActiveNav(ROUTES.GAMES),
       errorTitle: "게임 정보 로딩 오류",
@@ -176,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function renderPostPage(slug) {
     try {
-      const response = await fetch(`posts/${slug.toLowerCase()}.md`);
+      const response = await fetch(`${CONTENT_PATH_PREFIX.POSTS}${slug.toLowerCase()}${MARKDOWN_EXTENSION}`);
       if (!response.ok) {
         throw new Error(`Post '${slug}.md' not found (${response.status})`);
       }
@@ -218,15 +213,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.title = `페이지를 찾을 수 없음 | ${teamSiteTitleBase}`;
     updateActiveNav("");
     try {
-      const response = await fetch(`pages/not-found.html`);
+      const response = await fetch(`${CONTENT_PATH_PREFIX.PAGES}not-found.html`);
       if (!response.ok) {
         console.warn(
-          `pages/not-found.html not found (${response.status}), using fallback HTML.`
+          `${CONTENT_PATH_PREFIX.PAGES}not-found.html not found (${response.status}), using fallback HTML.`
         );
         appRoot.innerHTML = `
             <h2>404 - 페이지를 찾을 수 없습니다.</h2>
             <p>요청하신 페이지가 존재하지 않거나, 주소가 변경되었을 수 있습니다.</p>
-            <p><a href="#">팀 소개 페이지로 돌아가기</a></p>
+            <p><a href="#${ROUTES.HOME}">팀 소개 페이지로 돌아가기</a></p>
         `;
       } else {
         const rawContent = await response.text();
@@ -236,33 +231,30 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error rendering not found page:", error);
       appRoot.innerHTML = `
             <h2>오류 발생</h2>
-            <p>페이지를 표시하는 중 문제가 발생했습니다. <a href="#">홈으로 돌아가기</a></p>
+            <p>페이지를 표시하는 중 문제가 발생했습니다. <a href="#${ROUTES.HOME}">홈으로 돌아가기</a></p>
         `;
     }
   }
 
-  function updateActiveNav(currentPath) {
+  function updateActiveNav(activeRoute) {
     document.querySelectorAll("header nav a").forEach((link) => {
-      let linkPath = link.getAttribute("href").startsWith("#")
-        ? link.getAttribute("href").slice(1)
-        : link.getAttribute("href");
-      if (!linkPath.startsWith("/")) {
-        linkPath = "/" + linkPath;
+      const linkHref = link.getAttribute("href");
+
+      if (!linkHref || !linkHref.startsWith("#")) {
+        link.classList.remove("active");
+        return;
       }
 
-      let normalizedCurrentPath = currentPath;
-      if (!normalizedCurrentPath.startsWith("/")) {
-        normalizedCurrentPath = "/" + normalizedCurrentPath;
-      }
-
-      if (linkPath === normalizedCurrentPath) {
+      const linkPath = linkHref.slice(1);
+      if (activeRoute === "") {
+        link.classList.remove("active");
+      } else if (linkPath === activeRoute) {
         link.classList.add("active");
       } else {
         link.classList.remove("active");
       }
     });
   }
-
   window.addEventListener("hashchange", router);
   router();
 });
