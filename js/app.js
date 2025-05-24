@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     HOME: "/",
     BLOG: "/blog",
     GAMES: "/games",
-    POST_PREFIX: "/post/",
+    POST_PREFIX: "/posts/",
   };
 
   function parseMarkdown(rawContent) {
