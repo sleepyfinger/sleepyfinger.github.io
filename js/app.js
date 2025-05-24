@@ -34,8 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
           const key = lines[i].substring(0, separatorIndex).trim();
           let value = lines[i].substring(separatorIndex + 1).trim();
           if (
-            (value.startsWith("'") && value.endsWith("'")) ||
-            (value.startsWith('"') && value.endsWith('"'))
+            (value.length >= 2 && value.startsWith("'") && value.endsWith("'")) ||
+            (value.length >= 2 && value.startsWith('"') && value.endsWith('"'))
           ) {
             value = value.substring(1, value.length - 1);
           }
